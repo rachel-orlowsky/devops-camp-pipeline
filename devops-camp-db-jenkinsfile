@@ -27,6 +27,14 @@ pipeline {
                 }
             }
         }
+        stage('Security scanning') {
+            steps {
+                  withCredentials([usernamePassword(credentialsId: 'rorlowsky-harbor-auth', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                      echo "Scanning $DB_IMAGE_NAME image"
+                      sh 'python harbor_scanner.py -i $DB_IMAGE_NAME -r $HARBOR_REGISTRY -p $HARBOR_PROJECT -c ${USERNAME}:${PASSWORD}'
+                  }
+            }
+        }
         stage('DB changes: true') {
            when {
               environment name: 'BUILD_DB', value: 'true'
