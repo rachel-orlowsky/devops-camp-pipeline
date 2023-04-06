@@ -38,8 +38,8 @@ pipeline {
                       //TODO: build docker image & push to Harbor
                       withCredentials([usernameColonPassword(credentialsId: 'rorlowsky-harbor-auth', variable: 'HARBOR-AUTH')]) {
                           script {
-                              //sh 'docker build -t $DB_IMAGE_NAME-$COMMIT_HASH -f ./db/Dockerfile ./afs-labs-student'
-                              docker.build('$DB_IMAGE_NAME-$COMMIT_HASH', '-f ./db/Dockerfile ./afs-labs-student')
+                              sh 'docker build -t $DB_IMAGE_NAME-$COMMIT_HASH -f ./db/Dockerfile ./afs-labs-student'
+                              //docker.build('$DB_IMAGE_NAME-$COMMIT_HASH', '-f ./db/Dockerfile ./afs-labs-student')
                               docker.withRegistry('https://$HARBOR_REGISTRY', 'rorlowsky-harbor-auth') {
                                   sh 'docker tag $DB_IMAGE_NAME-$COMMIT_HASH $HARBOR_REGISTRY/$HARBOR_PROJECT/$DB_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
                                   sh 'docker push $HARBOR_REGISTRY/$HARBOR_PROJECT/$DB_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
